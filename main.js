@@ -1,4 +1,4 @@
-Vue.component('product', {
+Vue.component("product", {
     template: `
         <div class="product">
             <div class="product-image">
@@ -23,9 +23,6 @@ Vue.component('product', {
                 <button @click="addToCart" :disabled="!inStock" :class='{ disabledButton: !inStock}'>
                         Add to Cart
                 </button>
-                <div class="cart">
-                    <p>Cart({{cart}})</p>
-                </div>
             </div>
          </div>
     `,
@@ -55,12 +52,14 @@ Vue.component('product', {
                     variantQuantity: 0,
                 },
             ],
-            cart: 0,
         };
     },
     methods: {
-        addToCart: function () {
-            this.cart += 1;
+        addToCart() {
+            this.$emit(
+                "add-to-cart",
+                this.variants[this.selectedVariant].variantId
+            );
         },
         updateProduct(index) {
             this.selectedVariant = index;
@@ -79,11 +78,11 @@ Vue.component('product', {
         },
         shipping() {
             if (this.premium) {
-                return "Free"
+                return "Free";
             } else {
-                return 2.99
+                return 2.99;
             }
-        }
+        },
     },
 });
 
@@ -91,5 +90,11 @@ var app = new Vue({
     el: "#app",
     data: {
         premium: true,
+        cart: [],
+    },
+    methods: {
+        updateCart(id) {
+            this.cart.push(id);
+        },
     },
 });
